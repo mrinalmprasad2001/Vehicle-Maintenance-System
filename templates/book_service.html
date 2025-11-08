@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+  .card {
+    border-radius: 0.75rem;
+    transition: transform 0.2s ease-in-out;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  .card-header {
+    background-color: #640D5F;
+    color: white;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+  }
+  label {
+    font-weight: 500;
+    color: #333;
+  }
+  input, select, textarea {
+    border-radius: 0.5rem !important;
+    border: 1px solid #ced4da;
+    width: 100%;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: #640D5F;
+    box-shadow: 0 0 0 0.15rem rgba(100, 13, 95, 0.25);
+  }
+  button.btn:hover {
+    opacity: 0.9;
+  }
+  @media (max-width: 992px) {
+    .card {
+      margin: 0 1rem;
+    }
+  }
+  @media (max-width: 576px) {
+    h3 {
+      font-size: 1.4rem;
+    }
+    .card-body {
+      padding: 1.5rem;
+    }
+    input, select, textarea {
+      font-size: 0.9rem;
+    }
+  }
+</style>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-11 col-sm-10 col-md-8 col-lg-6">
+      <div class="card shadow-lg border-0">
+        <div class="card-header text-center py-3">
+          <h3 class="fw-bold mb-0">
+            <i class="bi bi-tools me-2"></i>Book a Service
+          </h3>
+        </div>
+        <div class="card-body bg-light">
+          <form method="POST" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+              <div class="mb-3">
+                {{ field.label_tag }}
+                {% if "date" in field.name %}
+                  <input type="date" name="{{ field.name }}" class="form-control" required>
+                {% else %}
+                  {{ field }}
+                {% endif %}
+                {% for error in field.errors %}
+                  <div class="text-danger small mt-1">{{ error }}</div>
+                {% endfor %}
+              </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary w-100 mt-3" style="background-color:#280A3E; color:white; border: none;">Submit Service</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

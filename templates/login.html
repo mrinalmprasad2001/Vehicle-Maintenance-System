@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  body {
+    min-height: 100vh;
+  }
+  .login-container {
+    min-height: 90vh;
+  }
+  @media (max-width: 768px) {
+    .card {
+      margin: 20px;
+      padding: 1.5rem !important;
+    }
+    .card h4 {
+      font-size: 1.3rem;
+    }
+  }
+</style>
+<div class="container login-container d-flex justify-content-center align-items-center">
+  <div class="col-11 col-sm-8 col-md-6 col-lg-4">
+    <div class="card shadow-lg p-4 rounded-4" style="background-color: rgba(255, 255, 255, 0.9);">
+      <div class="text-center mb-4">
+        <i class="bi bi-person-fill-check fa-4x mb-3" style="color: #4C1F7A;"></i>
+        <h4 class="fw-bold text-dark">Welcome Back!</h4>
+        <p class="text-muted small">Log in to access your account</p>
+      </div>
+      {% if form.errors %}
+      <div class="alert alert-danger text-center py-2">
+        <small><strong>Incorrect username or password. Please try again.</strong></small>
+      </div>
+      {% endif %}
+      <form method="POST" novalidate>
+        {% csrf_token %}
+        <div class="mb-3">
+          {{ form.username.label_tag }}
+          {{ form.username }}
+        </div>
+        <div class="mb-4">
+          {{ form.password.label_tag }}
+          {{ form.password }}
+        </div>
+        <button type="submit" class="btn w-100 py-2 rounded" style="background-color: #441752; color: white;">Login</button>
+      </form>
+      <div class="text-center mt-3">
+        <p class="text-muted mb-0">Don't have an account?
+          <a href="{% url 'register_user' %}" class="text-decoration-none fw-bold" style="color: #261FB3;">Register here</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

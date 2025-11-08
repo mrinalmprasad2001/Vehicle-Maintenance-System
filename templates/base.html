@@ -1,0 +1,179 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>revitrax.in</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+    }
+    .navbar {
+      background: linear-gradient(90deg, #511D43, #7D224C);
+    }
+    .navbar-brand img {
+      height: 70px;
+      width: auto;
+      transition: transform 0.3s ease;
+    }
+    .navbar-brand img:hover {
+      transform: scale(1.05);
+    }
+    .nav-link {
+      font-weight: 500;
+      color: #fff !important;
+      transition: 0.3s;
+    }
+    .nav-link:hover {
+      color: #ffd6e8;
+      text-decoration: underline;
+    }
+    .navbar-toggler {
+      border: none;
+    }
+    .navbar-toggler:focus {
+      box-shadow: none;
+    }
+    .content-container {
+      flex: 1;
+      padding: 40px 15px;
+    }
+    footer {
+      background: #641B2E;
+      color: #fff;
+    }
+    footer h5 {
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+    }
+    footer p, footer a {
+      font-size: 0.95rem;
+    }
+    footer a {
+      color: #f8f9fa;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    footer a:hover {
+      color: #ffd6e8;
+      text-decoration: underline;
+    }
+    .social-icons a {
+      font-size: 1.2rem;
+      margin: 0 10px;
+      transition: 0.3s;
+    }
+    .social-icons a:hover {
+      color: #ffd6e8;
+      transform: scale(1.2);
+    }
+    hr {
+      opacity: 0.2;
+    }
+    @media (max-width: 768px) {
+      .navbar-brand img {
+        height: 45px;
+      }
+      .content-container {
+        padding: 25px 10px;
+      }
+      footer .col-md-4 {
+        text-align: center;
+      }
+      .social-icons {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+        <img src="{% static 'main_logo.png' %}" alt="Revitrax Logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-lg-center">
+          <li class="nav-item mx-2">
+            <a class="nav-link" href="{% url 'home' %}">Home</a>
+          </li>
+          <li class="nav-item mx-2">
+            <a class="nav-link" href="#">About Us</a>
+          </li>
+          <li class="nav-item mx-2">
+            <a class="nav-link" href="#">Services</a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item mx-2">
+            <a class="nav-link" href="{% url 'logout_user' %}">Logout</a>
+          </li>
+          {% else %}
+          <li class="nav-item mx-2">
+            <a class="nav-link" href="{% url 'login_user' %}">Login</a>
+          </li>
+          <li class="nav-item mx-2">
+            <a class="nav-link" href="{% url 'register_user' %}">Register</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container content-container">
+    {% for message in messages %}
+      <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </div>
+  <footer class="pt-5 pb-4">
+    <div class="container">
+      <div class="row text-center text-md-start">
+        <div class="col-md-4 mb-4">
+          <h5>Revitrax</h5>
+          <p>Your trusted partner for all vehicle maintenance needs from repairs to check-ups, ensuring your journey is always smooth.</p>
+        </div>
+        <div class="col-md-4 mb-4">
+          <h5>Quick Links</h5>
+          <ul class="list-unstyled">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Feedbacks</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4 mb-4">
+          <h5>Contact</h5>
+          <p><i class="bi bi-geo-alt-fill me-2"></i>96, GST Road, Alandur, Tamil Nadu - 600016</p>
+          <p><i class="bi bi-envelope-fill me-2"></i>adminrvt@rms.in</p>
+          <p><i class="bi bi-telephone-fill me-2"></i>0284 2385574 (Office), +91 6543455677 (Manager)</p>
+          <div class="d-flex social-icons mt-3">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="bi bi-twitter-x"></i></a>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <p class="text-center small mb-0">
+        © 2025 <strong>REVITRAX</strong>. All Rights Reserved. | Developed by
+        <a href="https://www.linkedin.com/in/mrinal-m-prasad" class="fw-bold text-light text-decoration-none">Mrinal M Prasad</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+  .dashboard-container {
+    min-height: 90vh;
+  }
+  .card {
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #441752, #261FB3);
+    color: white !important;
+  }
+  .badge {
+    font-size: 0.9rem;
+  }
+  @media (max-width: 768px) {
+    .card-header h5 {
+      font-size: 1rem;
+    }
+    .list-group-item {
+      font-size: 0.9rem;
+    }
+    h3 {
+      font-size: 1.3rem;
+    }
+  }
+</style>
+<div class="container dashboard-container mt-4">
+  <h3 class="mb-4 text-center fw-bold" style="color: #161179">Hello, Welcome Revitrax Manager</h3>
+  <p class="text-center text-secondary">Manage customer needs and assign duty to servicers</p>
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header">
+      <h5 class="mb-0">Registered Users</h5>
+    </div>
+    <div class="card-body p-0">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <h6 class="fw-bold text-primary mb-2"><i class="bi bi-person-fill me-1"></i>Registered Customers</h6>
+          <ul class="list-group">
+            {% for u in users %}
+              {% if u.role == "customer" %}
+              <li class="list-group-item border-0 ps-4">{{ u.user.username }}</li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </li>
+        <li class="list-group-item">
+          <h6 class="fw-bold text-success mb-2"><i class="bi bi-wrench-adjustable-circle me-1"></i>Available Servicers</h6>
+          <ul class="list-group">
+            {% for u in users %}
+              {% if u.role == "servicer" %}
+              <li class="list-group-item border-0 ps-4">{{ u.user.username }}</li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header">
+      <h5 class="mb-0">All Service Requests</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+      {% for s in services %}
+      <li class="list-group-item">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+          <div class="mb-3 mb-md-0">
+            <h6 class="mb-1"><strong>Vehicle:</strong> {{ s.vehicle.vehicle_number }}</h6>
+            <p class="mb-1"><strong>Description:</strong> {{ s.description }}</p>
+            <p class="mb-1"><strong>Status:</strong>
+              <span class="badge bg-info text-dark">{{ s.status }}</span>
+            </p>
+            {% if s.servicer %}
+            <p class="mb-1"><strong>Assigned To:</strong> {{ s.servicer.username }}</p>
+            {% endif %}
+          </div>
+          <div class="text-md-end">
+            {% if not s.servicer %}
+            <form method="POST" action="{% url 'assign_servicer' s.id %}">
+              {% csrf_token %}
+              <div class="input-group input-group-sm">
+                <select name="servicer_id" class="form-select">
+                  {% for serv in servicers %}
+                  <option value="{{ serv.id }}">{{ serv.username }}</option>
+                  {% endfor %}
+                </select>
+                <button class="btn btn-primary">Assign</button>
+              </div>
+            </form>
+            {% else %}
+            <span class="badge bg-success p-2">Assigned</span>
+            {% endif %}
+          </div>
+        </div>
+      </li>
+      {% empty %}
+      <li class="list-group-item text-center text-muted">No service requests available.</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="card shadow-sm">
+    <div class="card-header">
+      <h5 class="mb-0">Customer Feedbacks</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+      {% for f in feedbacks %}
+      <li class="list-group-item">
+        <strong>{{ f.customer.username }}</strong> rated
+        <span class="text-warning fw-bold">{{ f.rating }}★</span>
+        <br>
+        <small class="text-muted">{{ f.comments }}</small>
+      </li>
+      {% empty %}
+      <li class="list-group-item text-center text-muted">No feedbacks yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

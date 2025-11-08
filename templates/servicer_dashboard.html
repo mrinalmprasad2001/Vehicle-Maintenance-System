@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+  .card {
+    border-radius: 0.75rem;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #441752, #261FB3);
+  }
+  .badge {
+    font-size: 0.85rem;
+  }
+  .card-body {
+    background-color: #fff;
+  }
+  @media (max-width: 768px) {
+    h3 {
+      font-size: 1.4rem;
+    }
+    .card-header h5 {
+      font-size: 1rem;
+    }
+    .btn {
+      font-size: 0.9rem;
+    }
+  }
+</style>
+<div class="container mt-5">
+  <div class="text-center mb-5">
+    <h3 class="fw-bold" style="color: #161179">Welcome, {{ user.username }}!</h3>
+    <p class="text-muted">Here’s a summary of your assigned service requests.</p>
+  </div>
+  {% if services %}
+    {% for s in services %}
+      <div class="card mb-4 shadow-sm border-0">
+        <div class="card-header text-white py-3">
+          <h5 class="mb-0">
+            {{ s.vehicle.company }} {{ s.vehicle.model }} ({{ s.vehicle.year }})
+            <span class="badge bg-light text-primary ms-2">{{ s.status }}</span>
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p class="mb-1"><strong>Vehicle Number:</strong> {{ s.vehicle.vehicle_number }}</p>
+              <p class="mb-1"><strong>Customer:</strong> {{ s.vehicle.owner.username }}</p>
+            </div>
+            <div class="col-md-6">
+              <p class="mb-3"><strong>Service Description:</strong> {{ s.description }}</p>
+            </div>
+          </div>
+          <form method="POST" action="{% url 'update_service_status' s.id %}">
+            {% csrf_token %}
+            <div class="row g-3 align-items-end">
+              <div class="col-md-8">
+                <label class="form-label fw-semibold">Update Status</label>
+                <select name="status" class="form-select shadow-sm">
+                  <option value="Pending" {% if s.status == "Pending" %}selected{% endif %}>Pending</option>
+                  <option value="In Progress" {% if s.status == "In Progress" %}selected{% endif %}>In Progress</option>
+                  <option value="Completed" {% if s.status == "Completed" %}selected{% endif %}>Completed</option>
+                  <option value="Cancelled" {% if s.status == "Cancelled" %}selected{% endif %}>Cancelled</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <button class="btn btn-success w-100 shadow-sm mt-2 mt-md-0">Save Changes</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-info text-center shadow-sm rounded-pill py-3">No assigned services at the moment.</div>
+  {% endif %}
+</div>
+{% endblock %}
